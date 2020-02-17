@@ -62,10 +62,13 @@ public class BotComponent extends BukkitComponent {
         clientThread.start();
 
         CommandBook.registerEvents(new ChatBridgeListener());
+
+        notifyServerOn();
     }
 
     @Override
     public void disable() {
+        notifyServerOff();
         if (daemon != null) {
             daemon.destroy();
         }
@@ -80,6 +83,19 @@ public class BotComponent extends BukkitComponent {
         configure(config);
 
         bot.updateConfig();
+    }
+
+    private void notifyServerOn() {
+        bot.sendMessageToSyncChannels("Server back online");
+    }
+
+    private void notifyServerOff() {
+        bot.sendMessageToSyncChannels("Server shutting down");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Bot getBot() {

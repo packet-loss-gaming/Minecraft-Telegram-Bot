@@ -45,6 +45,11 @@ public class ClientServerBot implements Bot {
     }
 
     @Override
+    public void sendMessageToSyncChannels(String message) {
+        pendingEvents.add(new OutboundTextMessageEvent(message));
+    }
+
+    @Override
     public void updateConfig() {
         pendingEvents.add(new OutboundConfigSyncEvent(new ConfigDetail(
                 config.username, config.apiKey, config.syncChats

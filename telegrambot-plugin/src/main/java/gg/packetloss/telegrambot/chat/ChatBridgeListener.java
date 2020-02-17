@@ -27,8 +27,11 @@ import gg.packetloss.telegrambot.protocol.data.TextMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
 
@@ -78,11 +81,21 @@ public class ChatBridgeListener implements Listener {
         sendMessageBroadcast(senderName, messageBody + "*");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        getBot().sendMessageToSyncChannels(ChatColor.stripColor(event.getJoinMessage()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        getBot().sendMessageToSyncChannels(ChatColor.stripColor(event.getQuitMessage()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String sender = event.getPlayer().getName();
         String message = event.getMessage();
 
-        getBot().sendMessageToSyncChannels(sender, message);
+        getBot().sendMessageToSyncChannels(sender, ChatColor.stripColor(message));
     }
 }

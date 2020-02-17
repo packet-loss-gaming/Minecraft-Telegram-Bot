@@ -19,5 +19,6 @@ package gg.packetloss.telegrambot;
 
 public interface Bot {
     public void sendMessageToSyncChannels(String fromUser, String message);
+    public void sendMessageToSyncChannels(String message);
     public void updateConfig();
 }
