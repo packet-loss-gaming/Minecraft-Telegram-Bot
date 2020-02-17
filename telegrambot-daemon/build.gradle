@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+    compile project(':telegrambot-protocol')
+    compile group: 'org.telegram', name: 'telegrambots', version: '4.6'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'gg.packetloss.telegrambot.Daemon'
+        )
+    }
+}
+
+artifacts {
+    archives shadowJar
+}

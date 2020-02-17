@@ -1,0 +1,5 @@
+rootProject.name = 'Minecraft Telegram Bot'
+
+include 'telegrambot-daemon'
+include 'telegrambot-plugin'
+include 'telegrambot-protocol'
