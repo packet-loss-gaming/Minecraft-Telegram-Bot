@@ -17,18 +17,47 @@
 
 package gg.packetloss.telegrambot.chat;
 
-import gg.packetloss.telegrambot.protocol.data.TextMessage;
-import gg.packetloss.telegrambot.protocol.data.Sender;
+import com.google.common.collect.Lists;
+import gg.packetloss.bukkittext.Text;
+import gg.packetloss.bukkittext.TextAction;
 import gg.packetloss.telegrambot.event.TextMessageReceivedEvent;
 import gg.packetloss.telegrambot.event.TextMessageUpdatedEvent;
+import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.TextMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.List;
+
 import static gg.packetloss.telegrambot.BotComponent.getBot;
 
 public class ChatBridgeListener implements Listener {
+    private static final List<ChatColor> COLOR_OPTIONS = Lists.newArrayList(
+            ChatColor.AQUA, ChatColor.BLUE, ChatColor.GREEN, ChatColor.DARK_GREEN,
+            ChatColor.RED, ChatColor.DARK_RED, ChatColor.DARK_PURPLE, ChatColor.LIGHT_PURPLE,
+            ChatColor.GOLD, ChatColor.DARK_AQUA
+    );
+
+    private ChatColor getNameColor(String name) {
+        return COLOR_OPTIONS.get(name.hashCode() % COLOR_OPTIONS.size());
+    }
+
+    private void sendMessageBroadcast(String senderName, String messageBody) {
+        Bukkit.broadcast(Text.of(
+                Text.of(
+                    ChatColor.BLUE,
+                    "<",
+                    Text.of(getNameColor(senderName), senderName),
+                    "> ",
+                    TextAction.Hover.showText(Text.of("Sent via Telegram"))
+                ),
+                messageBody
+        ).build());
+    }
+
     @EventHandler
     public void onMessageReceivedEvent(TextMessageReceivedEvent event) {
         TextMessage message = event.getMessage();
@@ -36,7 +65,7 @@ public class ChatBridgeListener implements Listener {
         String senderName = message.getSender().map(Sender::getName).orElse("Unknown Sender");
         String messageBody = message.getBody();
 
-        Bukkit.broadcastMessage("[TG] <" + senderName + "> " + messageBody);
+        sendMessageBroadcast(senderName, messageBody);
     }
 
     @EventHandler
@@ -46,7 +75,7 @@ public class ChatBridgeListener implements Listener {
         String senderName = message.getSender().map(Sender::getName).orElse("Unknown Sender");
         String messageBody = message.getBody();
 
-        Bukkit.broadcastMessage("[TG] <" + senderName + "> " + messageBody + "*");
+        sendMessageBroadcast(senderName, messageBody + "*");
     }
 
     @EventHandler

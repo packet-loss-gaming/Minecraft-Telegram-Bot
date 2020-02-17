@@ -26,6 +26,9 @@ repositories {
 
 dependencies {
     compile project(':telegrambot-protocol')
+
+    compile group: 'gg.packetloss', name: 'bukkit-text', version: '1.0'
+
     compile group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.15.1-R0.1-SNAPSHOT'
 
     compile(group: 'com.sk89q', name: 'commandbook', version: '3.0-SNAPSHOT') {
@@ -51,5 +54,8 @@ artifacts {
 shadowJar {
     dependencies {
         include(project(":telegrambot-protocol"))
+        relocate ("gg.packetloss.bukkittext", "gg.packetloss.telegrambot.bukkittext") {
+            include(dependency("gg.packetloss:bukkit-text"))
+        }
     }
 }
