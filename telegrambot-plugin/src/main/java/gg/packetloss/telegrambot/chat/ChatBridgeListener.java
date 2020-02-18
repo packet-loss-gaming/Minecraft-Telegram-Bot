@@ -29,6 +29,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -89,6 +90,13 @@ public class ChatBridgeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent event) {
         getBot().sendMessageToSyncChannels(ChatColor.stripColor(event.getQuitMessage()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        String message = event.getDeathMessage();
+
+        getBot().sendMessageToSyncChannels(ChatColor.stripColor(message));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
