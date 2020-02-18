@@ -45,11 +45,24 @@ public class TelegramBot extends TelegramLongPollingBot {
         return config;
     }
 
+    private boolean isValidTextMessage(Message message) {
+        if (message.getText() == null) {
+            return false;
+        }
+
+        String chatId = String.valueOf(message.getChatId());
+        if (!config.getSyncChats().contains(chatId)) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
-            if (message.getText() != null) {
+            if (isValidTextMessage(message)) {
                 pendingEvents.add(new InboundNewMessageEvent(TextMessageFactory.build(message)));
             }
             return;
@@ -57,7 +70,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         if (update.hasEditedMessage()) {
             Message message = update.getEditedMessage();
-            if (message.getText() != null) {
+            if (isValidTextMessage(message)) {
                 pendingEvents.add(new InboundUpdatedTextMessageEvent(TextMessageFactory.build(message)));
             }
             return;
