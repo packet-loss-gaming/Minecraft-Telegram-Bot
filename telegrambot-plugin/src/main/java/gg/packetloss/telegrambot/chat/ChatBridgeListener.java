@@ -56,7 +56,8 @@ public class ChatBridgeListener implements Listener {
                     "<",
                     Text.of(getNameColor(senderName), senderName),
                     "> ",
-                    TextAction.Hover.showText(Text.of("Sent via Telegram"))
+                    TextAction.Hover.showText(Text.of("Sent via Telegram")),
+                    TextAction.Click.openURL("https://t.me/skelril")
                 ),
                 messageBody
         ).build());
