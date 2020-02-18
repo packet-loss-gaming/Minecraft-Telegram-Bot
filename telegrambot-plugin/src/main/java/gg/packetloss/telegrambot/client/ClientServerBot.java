@@ -22,6 +22,7 @@ import gg.packetloss.telegrambot.BotConfiguration;
 import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
 
 import java.util.ArrayDeque;
@@ -46,7 +47,7 @@ public class ClientServerBot implements Bot {
 
     @Override
     public void sendMessageToSyncChannels(String message) {
-        pendingEvents.add(new OutboundTextMessageEvent(message));
+        pendingEvents.add(new OutboundSilentTextMessageEvent(message));
     }
 
     @Override

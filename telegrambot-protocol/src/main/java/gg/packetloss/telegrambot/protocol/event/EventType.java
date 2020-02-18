@@ -21,6 +21,7 @@ import gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundNewMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundUpdatedTextMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
 
 public enum EventType {
@@ -30,7 +31,8 @@ public enum EventType {
     INBOUND_UPDATED_MESSAGE(InboundUpdatedTextMessageEvent.class),
 
     OUTBOUND_CONFIG_SYNC(OutboundConfigSyncEvent.class),
-    OUTBOUND_TEXT_MESSAGE(OutboundTextMessageEvent.class);
+    OUTBOUND_TEXT_MESSAGE(OutboundTextMessageEvent.class),
+    OUTBOUND_SILENT_TEXT_MESSAGE(OutboundSilentTextMessageEvent.class);
 
     private final Class<? extends ProtocolEvent> clazz;
 

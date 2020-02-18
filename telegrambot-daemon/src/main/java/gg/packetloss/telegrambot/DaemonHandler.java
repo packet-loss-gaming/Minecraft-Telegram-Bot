@@ -20,6 +20,7 @@ package gg.packetloss.telegrambot;
 import gg.packetloss.telegrambot.chat.ChatSender;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 
@@ -54,6 +55,10 @@ public class DaemonHandler {
         chatSender.sendMessageToSyncChannels(event.getText());
     }
 
+    private void handleSilentTextMessage(OutboundSilentTextMessageEvent event) {
+        chatSender.sendMessageToSyncChannelsSilently(event.getText());
+    }
+
     public void accept(ProtocolEvent event) {
         switch (event.getType()) {
             case OUTBOUND_CONFIG_SYNC:
@@ -61,6 +66,9 @@ public class DaemonHandler {
                 break;
             case OUTBOUND_TEXT_MESSAGE:
                 handleTextMessage((OutboundTextMessageEvent) event);
+                break;
+            case OUTBOUND_SILENT_TEXT_MESSAGE:
+                handleSilentTextMessage((OutboundSilentTextMessageEvent) event);
                 break;
             case GENERIC_NOTHING:
                 try {

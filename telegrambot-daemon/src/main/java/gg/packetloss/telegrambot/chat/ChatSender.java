@@ -32,10 +32,15 @@ public class ChatSender {
         this.bot = bot;
     }
 
-    public void sendMessageToSyncChannels(String text) {
+    private void sendMessageToSyncChannelsInternal(String message, boolean notify) {
         for (String syncChannel : bot.getConfig().getSyncChats()) {
             try {
-                bot.executeAsync(new SendMessage(syncChannel, text), new SentCallback<>() {
+                SendMessage telegramMessage = new SendMessage(syncChannel, message);
+                if (!notify) {
+                    telegramMessage.disableNotification();
+                }
+
+                bot.executeAsync(telegramMessage, new SentCallback<>() {
                     @Override
                     public void onResult(BotApiMethod<Message> method, Message response) {
 
@@ -55,5 +60,13 @@ public class ChatSender {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void sendMessageToSyncChannels(String text) {
+        sendMessageToSyncChannelsInternal(text, true);
+    }
+
+    public void sendMessageToSyncChannelsSilently(String text) {
+        sendMessageToSyncChannelsInternal(text, false);
     }
 }
