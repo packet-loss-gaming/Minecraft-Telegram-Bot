@@ -15,15 +15,16 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot;
+package gg.packetloss.telegrambot.protocol.data;
 
-import gg.packetloss.telegrambot.protocol.data.Chat;
-import gg.packetloss.telegrambot.protocol.data.Sender;
+public class Chat {
+    private final long id;
 
-public interface Bot {
-    public void sendMessageToChat(Chat chat, String message);
-    public void sendMessageToUserInChat(Sender user, Chat chat, String message);
-    public void sendMessageToSyncChannels(String fromUser, String message);
-    public void sendMessageToSyncChannels(String message);
-    public void updateConfig();
+    public Chat(long id) {
+        this.id = id;
+    }
+
+    public long getID() {
+        return id;
+    }
 }

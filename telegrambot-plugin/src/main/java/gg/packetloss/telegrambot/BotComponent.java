@@ -23,6 +23,7 @@ import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import gg.packetloss.telegrambot.chat.ChatBridgeListener;
 import gg.packetloss.telegrambot.client.ClientThread;
 import gg.packetloss.telegrambot.client.ClientServerBot;
+import gg.packetloss.telegrambot.command.RemoteCommandHandler;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -62,6 +63,7 @@ public class BotComponent extends BukkitComponent {
         clientThread.start();
 
         CommandBook.registerEvents(new ChatBridgeListener());
+        CommandBook.registerEvents(new RemoteCommandHandler());
 
         notifyServerOn();
     }

@@ -18,6 +18,8 @@
 package gg.packetloss.telegrambot.chat;
 
 import gg.packetloss.telegrambot.TelegramBot;
+import gg.packetloss.telegrambot.protocol.data.Chat;
+import gg.packetloss.telegrambot.protocol.data.Sender;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -68,5 +70,35 @@ public class ChatSender {
 
     public void sendMessageToSyncChannelsSilently(String text) {
         sendMessageToSyncChannelsInternal(text, false);
+    }
+
+    public void sendMessageToChat(Chat chat, String text) {
+        SendMessage telegramMessage = new SendMessage(chat.getID(), text);
+        telegramMessage.disableNotification();
+        try {
+            bot.executeAsync(telegramMessage, new SentCallback<>() {
+                @Override
+                public void onResult(BotApiMethod<Message> method, Message response) {
+
+                }
+
+                @Override
+                public void onError(BotApiMethod<Message> method, TelegramApiRequestException apiException) {
+
+                }
+
+                @Override
+                public void onException(BotApiMethod<Message> method, Exception exception) {
+
+                }
+            });
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessageToUserInChat(Sender user, Chat chat, String text) {
+        // We can't actually do this... For now, just send a message to the chat
+        sendMessageToChat(chat, text);
     }
 }

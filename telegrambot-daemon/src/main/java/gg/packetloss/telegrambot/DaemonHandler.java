@@ -19,9 +19,7 @@ package gg.packetloss.telegrambot;
 
 import gg.packetloss.telegrambot.chat.ChatSender;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.*;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 
 import static gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent.SLEEP_DURATION;
@@ -59,6 +57,14 @@ public class DaemonHandler {
         chatSender.sendMessageToSyncChannelsSilently(event.getText());
     }
 
+    private void handleTextMessageToChat(OutboundTextMessageToChatEvent event) {
+        chatSender.sendMessageToChat(event.getChat(), event.getText());
+    }
+
+    private void handleTextMessageToUserInChat(OutboundTextMessageToUserInChatEvent event) {
+        chatSender.sendMessageToUserInChat(event.getUser(), event.getChat(), event.getText());
+    }
+
     public void accept(ProtocolEvent event) {
         switch (event.getType()) {
             case OUTBOUND_CONFIG_SYNC:
@@ -69,6 +75,12 @@ public class DaemonHandler {
                 break;
             case OUTBOUND_SILENT_TEXT_MESSAGE:
                 handleSilentTextMessage((OutboundSilentTextMessageEvent) event);
+                break;
+            case OUTBOUND_TEXT_MESSAGE_TO_CHAT:
+                handleTextMessageToChat((OutboundTextMessageToChatEvent) event);
+                break;
+            case OUTBOUND_TEXT_MESSAGE_TO_USER_IN_CHAT:
+                handleTextMessageToUserInChat((OutboundTextMessageToUserInChatEvent) event);
                 break;
             case GENERIC_NOTHING:
                 try {

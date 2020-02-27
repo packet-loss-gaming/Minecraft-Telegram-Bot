@@ -17,8 +17,10 @@
 
 package gg.packetloss.telegrambot;
 
+import gg.packetloss.telegrambot.factory.CommandFactory;
 import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
+import gg.packetloss.telegrambot.protocol.event.inbout.InboundCommandEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundNewMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundUpdatedTextMessageEvent;
 import gg.packetloss.telegrambot.factory.TextMessageFactory;
@@ -58,13 +60,38 @@ public class TelegramBot extends TelegramLongPollingBot {
         return true;
     }
 
+    private boolean isValidCommand(Message message) {
+        if (message.getText() == null) {
+            return false;
+        }
+
+        if (!message.getText().startsWith("/")) {
+            return false;
+        }
+
+        if (message.getFrom() == null) {
+            return false;
+        }
+
+        // return message.getChat().isUserChat();
+        return true;
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
+
+            if (isValidCommand(message)) {
+                pendingEvents.add(new InboundCommandEvent(CommandFactory.build(message)));
+                return;
+            }
+
             if (isValidTextMessage(message)) {
                 pendingEvents.add(new InboundNewMessageEvent(TextMessageFactory.build(message)));
+                return;
             }
+
             return;
         }
 

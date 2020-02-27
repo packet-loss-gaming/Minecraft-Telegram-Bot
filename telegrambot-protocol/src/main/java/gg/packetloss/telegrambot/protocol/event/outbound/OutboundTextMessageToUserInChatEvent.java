@@ -15,15 +15,38 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot;
+package gg.packetloss.telegrambot.protocol.event.outbound;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.event.EventType;
+import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 
-public interface Bot {
-    public void sendMessageToChat(Chat chat, String message);
-    public void sendMessageToUserInChat(Sender user, Chat chat, String message);
-    public void sendMessageToSyncChannels(String fromUser, String message);
-    public void sendMessageToSyncChannels(String message);
-    public void updateConfig();
+public class OutboundTextMessageToUserInChatEvent extends ProtocolEvent {
+    private final Sender user;
+    private final Chat chat;
+    private final String text;
+
+    public OutboundTextMessageToUserInChatEvent(Sender user, Chat chat, String text) {
+        this.user = user;
+        this.chat = chat;
+        this.text = text;
+    }
+
+    public Sender getUser() {
+        return user;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    @Override
+    public EventType getType() {
+        return EventType.OUTBOUND_TEXT_MESSAGE_TO_USER_IN_CHAT;
+    }
 }

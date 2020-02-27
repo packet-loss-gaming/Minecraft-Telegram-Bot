@@ -18,21 +18,23 @@
 package gg.packetloss.telegrambot.protocol.event;
 
 import gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent;
+import gg.packetloss.telegrambot.protocol.event.inbout.InboundCommandEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundNewMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundUpdatedTextMessageEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.*;
 
 public enum EventType {
     GENERIC_NOTHING(GenericNothingEvent.class),
 
+    INBOUND_COMMAND(InboundCommandEvent.class),
     INBOUND_NEW_MESSAGE(InboundNewMessageEvent.class),
     INBOUND_UPDATED_MESSAGE(InboundUpdatedTextMessageEvent.class),
 
     OUTBOUND_CONFIG_SYNC(OutboundConfigSyncEvent.class),
     OUTBOUND_TEXT_MESSAGE(OutboundTextMessageEvent.class),
-    OUTBOUND_SILENT_TEXT_MESSAGE(OutboundSilentTextMessageEvent.class);
+    OUTBOUND_SILENT_TEXT_MESSAGE(OutboundSilentTextMessageEvent.class),
+    OUTBOUND_TEXT_MESSAGE_TO_CHAT(OutboundTextMessageToChatEvent.class),
+    OUTBOUND_TEXT_MESSAGE_TO_USER_IN_CHAT(OutboundTextMessageToUserInChatEvent.class);
 
     private final Class<? extends ProtocolEvent> clazz;
 

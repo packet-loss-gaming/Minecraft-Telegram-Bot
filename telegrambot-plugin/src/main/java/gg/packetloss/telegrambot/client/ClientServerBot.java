@@ -19,11 +19,11 @@ package gg.packetloss.telegrambot.client;
 
 import gg.packetloss.telegrambot.Bot;
 import gg.packetloss.telegrambot.BotConfiguration;
+import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
+import gg.packetloss.telegrambot.protocol.data.Sender;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundConfigSyncEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundSilentTextMessageEvent;
-import gg.packetloss.telegrambot.protocol.event.outbound.OutboundTextMessageEvent;
+import gg.packetloss.telegrambot.protocol.event.outbound.*;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -38,6 +38,16 @@ public class ClientServerBot implements Bot {
 
     public Deque<ProtocolEvent> getPendingEvents() {
         return pendingEvents;
+    }
+
+    @Override
+    public void sendMessageToChat(Chat chat, String message) {
+        pendingEvents.add(new OutboundTextMessageToChatEvent(chat, message));
+    }
+
+    @Override
+    public void sendMessageToUserInChat(Sender user, Chat chat, String message) {
+        pendingEvents.add(new OutboundTextMessageToUserInChatEvent(user, chat, message));
     }
 
     @Override
