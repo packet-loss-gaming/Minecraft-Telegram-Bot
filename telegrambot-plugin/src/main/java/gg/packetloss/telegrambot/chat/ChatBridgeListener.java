@@ -50,17 +50,21 @@ public class ChatBridgeListener implements Listener {
     }
 
     private void sendMessageBroadcast(String senderName, String messageBody) {
-        Bukkit.broadcast(Text.of(
+        var text = Text.of(
                 Text.of(
-                    ChatColor.BLUE,
-                    "<",
-                    Text.of(getNameColor(senderName), senderName),
-                    "> ",
-                    TextAction.Hover.showText(Text.of("Sent via Telegram")),
-                    TextAction.Click.openURL("https://t.me/skelril")
+                        ChatColor.BLUE,
+                        "<",
+                        Text.of(getNameColor(senderName), senderName),
+                        "> ",
+                        TextAction.Hover.showText(Text.of("Sent via Telegram")),
+                        TextAction.Click.openURL("https://t.me/skelril")
                 ),
                 messageBody
-        ).build());
+        ).build();
+
+        Bukkit.broadcast(text);
+        Bukkit.getConsoleSender().sendMessage(text); // console doesn't receive messages from broadcast when created
+                                                     // with text components (sadly)
     }
 
     @EventHandler
