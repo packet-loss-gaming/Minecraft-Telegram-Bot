@@ -32,15 +32,34 @@ import java.util.Deque;
 
 public class ClientThread extends Thread {
     private final ClientServerBot daemonBot;
+    private final Runnable restartDaemon;
     private final EventDispatch dispatch = new EventDispatch();
     private boolean isAlive = true;
+    private int failures = 0;
 
-    public ClientThread(ClientServerBot daemonBot) {
+    public ClientThread(ClientServerBot daemonBot, Runnable restartDaemon) {
         this.daemonBot = daemonBot;
+        this.restartDaemon = restartDaemon;
     }
 
     public void destroy() {
         this.isAlive = false;
+    }
+
+    private void sleepForFailure() throws InterruptedException {
+        ++failures;
+        sleep(failures * failures * 1000);
+    }
+
+    private void maybeRestartDaemon() {
+        if (failures > 0 && failures % 5 == 0) {
+            restartDaemon.run();
+        }
+    }
+
+    private void handleFailure() throws InterruptedException {
+        maybeRestartDaemon();
+        sleepForFailure();
     }
 
     private void runConnection() throws IOException, InterruptedException {
@@ -71,8 +90,13 @@ public class ClientThread extends Thread {
                     return daemonBot.getPendingEvents();
                 }
             }).accept(in, out);
+
+            failures = 0;
         } catch (ConnectException ex) {
-            sleep(1000);
+            handleFailure();
+        } catch (Throwable t) {
+            handleFailure();
+            throw t;
         }
     }
 

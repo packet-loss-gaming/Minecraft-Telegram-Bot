@@ -42,11 +42,30 @@ public class BotComponent extends BukkitComponent {
         ).toAbsolutePath().toString();
     }
 
-    private void launchDaemon() {
+    private void destroyDaemonIfRunning() {
+        if (daemon != null) {
+            daemon.destroy();
+            daemon = null;
+        }
+    }
+
+    private void createNewDaemon() {
         try {
             daemon = new ProcessBuilder().inheritIO().command("java", "-jar", getDaemonPath()).start();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void launchDaemon() {
+        destroyDaemonIfRunning();
+        createNewDaemon();
+    }
+
+    private void destroyClientThreadIfRunning() {
+        if (clientThread != null) {
+            clientThread.destroy();
+            clientThread = null;
         }
     }
 
@@ -59,7 +78,7 @@ public class BotComponent extends BukkitComponent {
         bot = new ClientServerBot(config);
         bot.updateConfig();
 
-        clientThread = new ClientThread(bot);
+        clientThread = new ClientThread(bot, this::launchDaemon);
         clientThread.start();
 
         CommandBook.registerEvents(new ChatBridgeListener());
@@ -71,12 +90,8 @@ public class BotComponent extends BukkitComponent {
     @Override
     public void disable() {
         notifyServerOff();
-        if (daemon != null) {
-            daemon.destroy();
-        }
-        if (clientThread != null) {
-            clientThread.destroy();
-        }
+        destroyDaemonIfRunning();
+        destroyClientThreadIfRunning();
     }
 
     @Override
