@@ -46,7 +46,7 @@ public class ChatBridgeListener implements Listener {
     );
 
     private ChatColor getNameColor(String name) {
-        return COLOR_OPTIONS.get(name.hashCode() % COLOR_OPTIONS.size());
+        return COLOR_OPTIONS.get(Math.abs(name.hashCode()) % COLOR_OPTIONS.size());
     }
 
     private void sendMessageBroadcast(String senderName, String messageBody) {
