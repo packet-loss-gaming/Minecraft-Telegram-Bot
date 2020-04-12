@@ -25,6 +25,7 @@ import gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketException;
 import java.util.Deque;
 
 public class MessageProcessor {
@@ -59,7 +60,7 @@ public class MessageProcessor {
         }
     }
 
-    public void accept(BufferedReader in, PrintWriter out) {
+    public void accept(BufferedReader in, PrintWriter out) throws SocketException {
         while (adapter.isAlive()) {
             try {
                 if (adapter.isServer()) {
@@ -69,6 +70,8 @@ public class MessageProcessor {
                     doOutbound(out);
                     doInbound(in);
                 }
+            } catch (SocketException e) {
+                throw e; // forward any socket errors
             } catch (Throwable t) {
                 t.printStackTrace();
             }
