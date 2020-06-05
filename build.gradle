@@ -9,5 +9,6 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 
+    group = 'gg.packetloss'
     version = '1.0'
 }
