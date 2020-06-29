@@ -15,36 +15,24 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.protocol.data;
+package gg.packetloss.telegrambot.protocol.event.outbound;
 
-import java.util.List;
+import gg.packetloss.telegrambot.protocol.event.EventType;
+import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 
-public class ConfigDetail {
-    private final String name;
-    private final String apiKey;
-    private final List<String> syncChats;
-    private final List<String> modChats;
+public class OutboundModTextMessageEvent extends ProtocolEvent {
+    private final String text;
 
-    public ConfigDetail(String name, String apiKey, List<String> syncChats, List<String> modChats) {
-        this.name = name;
-        this.apiKey = apiKey;
-        this.syncChats = syncChats;
-        this.modChats = modChats;
+    public OutboundModTextMessageEvent(String text) {
+        this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public String getAPIKey() {
-        return apiKey;
-    }
-
-    public List<String> getSyncChats() {
-        return syncChats;
-    }
-
-    public List<String> getModChats() {
-        return modChats;
+    @Override
+    public EventType getType() {
+        return EventType.OUTBOUND_MOD_TEXT_MESSAGE;
     }
 }

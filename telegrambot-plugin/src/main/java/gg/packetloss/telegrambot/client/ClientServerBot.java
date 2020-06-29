@@ -61,9 +61,17 @@ public class ClientServerBot implements Bot {
     }
 
     @Override
+    public void sendMessageToModChannels(String message) {
+        pendingEvents.add(new OutboundModTextMessageEvent(message));
+    }
+
+    @Override
     public void updateConfig() {
         pendingEvents.add(new OutboundConfigSyncEvent(new ConfigDetail(
-                config.username, config.apiKey, config.syncChats
+                config.username,
+                config.apiKey,
+                config.syncChats,
+                config.modChats
         )));
     }
 }

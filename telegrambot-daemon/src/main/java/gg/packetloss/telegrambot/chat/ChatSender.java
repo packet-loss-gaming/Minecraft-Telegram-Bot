@@ -34,33 +34,37 @@ public class ChatSender {
         this.bot = bot;
     }
 
-    private void sendMessageToSyncChannelsInternal(String message, boolean notify) {
-        for (String syncChannel : bot.getConfig().getSyncChats()) {
-            try {
-                SendMessage telegramMessage = new SendMessage(syncChannel, message);
-                if (!notify) {
-                    telegramMessage.disableNotification();
+    private void sendMessageToChannel(String channel, String message, boolean notify) {
+        try {
+            SendMessage telegramMessage = new SendMessage(channel, message);
+            if (!notify) {
+                telegramMessage.disableNotification();
+            }
+
+            bot.executeAsync(telegramMessage, new SentCallback<>() {
+                @Override
+                public void onResult(BotApiMethod<Message> method, Message response) {
+
                 }
 
-                bot.executeAsync(telegramMessage, new SentCallback<>() {
-                    @Override
-                    public void onResult(BotApiMethod<Message> method, Message response) {
+                @Override
+                public void onError(BotApiMethod<Message> method, TelegramApiRequestException apiException) {
 
-                    }
+                }
 
-                    @Override
-                    public void onError(BotApiMethod<Message> method, TelegramApiRequestException apiException) {
+                @Override
+                public void onException(BotApiMethod<Message> method, Exception exception) {
 
-                    }
+                }
+            });
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 
-                    @Override
-                    public void onException(BotApiMethod<Message> method, Exception exception) {
-
-                    }
-                });
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+    private void sendMessageToSyncChannelsInternal(String message, boolean notify) {
+        for (String syncChannel : bot.getConfig().getSyncChats()) {
+            sendMessageToChannel(syncChannel, message, notify);
         }
     }
 
@@ -100,5 +104,19 @@ public class ChatSender {
     public void sendMessageToUserInChat(Sender user, Chat chat, String text) {
         // We can't actually do this... For now, just send a message to the chat
         sendMessageToChat(chat, text);
+    }
+
+    private void sendMessageToModChannelsInternal(String message, boolean notify) {
+        for (String syncChannel : bot.getConfig().getModChats()) {
+            sendMessageToChannel(syncChannel, message, notify);
+        }
+    }
+
+    public void sendMessageToModChannels(String text) {
+        sendMessageToModChannelsInternal(text, true);
+    }
+
+    public void sendMessageToModChannelsSilently(String text) {
+        sendMessageToModChannelsInternal(text, false);
     }
 }

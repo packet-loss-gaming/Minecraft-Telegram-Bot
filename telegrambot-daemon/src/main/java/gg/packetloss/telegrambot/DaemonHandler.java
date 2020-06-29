@@ -65,6 +65,14 @@ public class DaemonHandler {
         chatSender.sendMessageToUserInChat(event.getUser(), event.getChat(), event.getText());
     }
 
+    private void handleModTextMessage(OutboundModTextMessageEvent event) {
+        chatSender.sendMessageToModChannels(event.getText());
+    }
+
+    private void handleModSilentTextMessage(OutboundModSilentTextMessageEvent event) {
+        chatSender.sendMessageToModChannelsSilently(event.getText());
+    }
+
     public void accept(ProtocolEvent event) {
         switch (event.getType()) {
             case OUTBOUND_CONFIG_SYNC:
@@ -81,6 +89,12 @@ public class DaemonHandler {
                 break;
             case OUTBOUND_TEXT_MESSAGE_TO_USER_IN_CHAT:
                 handleTextMessageToUserInChat((OutboundTextMessageToUserInChatEvent) event);
+                break;
+            case OUTBOUND_MOD_TEXT_MESSAGE:
+                handleModTextMessage((OutboundModTextMessageEvent) event);
+                break;
+            case OUTBOUND_MOD_SILENT_TEXT_MESSAGE:
+                handleModSilentTextMessage((OutboundModSilentTextMessageEvent) event);
                 break;
             case GENERIC_NOTHING:
                 try {

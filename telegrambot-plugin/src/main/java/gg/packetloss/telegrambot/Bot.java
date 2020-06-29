@@ -25,5 +25,6 @@ public interface Bot {
     public void sendMessageToUserInChat(Sender user, Chat chat, String message);
     public void sendMessageToSyncChannels(String fromUser, String message);
     public void sendMessageToSyncChannels(String message);
+    public void sendMessageToModChannels(String message);
     public void updateConfig();
 }

@@ -30,4 +30,6 @@ public class BotConfiguration extends ConfigurationBase {
     public String apiKey = "";
     @Setting("chat-bridge.sync-chats")
     public List<String> syncChats = new ArrayList<>();
+    @Setting("chat-bridge.mod-chats")
+    public List<String> modChats = new ArrayList<>();
 }
