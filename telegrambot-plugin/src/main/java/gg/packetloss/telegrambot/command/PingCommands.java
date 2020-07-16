@@ -17,20 +17,22 @@
 
 package gg.packetloss.telegrambot.command;
 
-import gg.packetloss.telegrambot.BotCommandManager;
-import gg.packetloss.telegrambot.event.CommandReceivedEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import gg.packetloss.telegrambot.protocol.data.Chat;
+import gg.packetloss.telegrambot.protocol.data.Sender;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
 
-public class RemoteCommandHandler implements Listener {
-    private final BotCommandManager commandManager;
+import static gg.packetloss.telegrambot.BotComponent.getBot;
 
-    public RemoteCommandHandler(BotCommandManager commandManager) {
-        this.commandManager = commandManager;
+@CommandContainer
+public class PingCommands {
+    @Command(name = "ping", desc = "Ping the bot")
+    public void pingCmd(Chat chat) {
+        getBot().sendMessageToChat(chat, "Pong!");
     }
 
-    @EventHandler
-    public void onCommand(CommandReceivedEvent event) {
-        commandManager.handleCommand(event.getSender(), event.getChat(), event.getCommandText());
+    @Command(name = "pong", desc = "Ping the bot (with a twist)")
+    public void pongCmd(Chat chat, Sender sender) {
+        getBot().sendMessageToChat(chat, sender.getName() + " likes cute, rabid, cows!");
     }
 }

@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 public class BotComponent extends BukkitComponent {
     private static ClientServerBot bot;
     private BotConfiguration config;
+    private BotCommandManager commandManager = new BotCommandManager();
     private Process daemon;
     private ClientThread clientThread;
 
@@ -73,6 +74,8 @@ public class BotComponent extends BukkitComponent {
     public void enable() {
         this.config = configure(new BotConfiguration());
 
+        commandManager.registerCoreCommands();
+
         launchDaemon();
 
         bot = new ClientServerBot(config);
@@ -82,7 +85,7 @@ public class BotComponent extends BukkitComponent {
         clientThread.start();
 
         CommandBook.registerEvents(new ChatBridgeListener());
-        CommandBook.registerEvents(new RemoteCommandHandler());
+        CommandBook.registerEvents(new RemoteCommandHandler(commandManager));
 
         notifyServerOn();
     }

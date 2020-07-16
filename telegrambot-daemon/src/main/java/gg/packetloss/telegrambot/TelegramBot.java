@@ -65,7 +65,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             return false;
         }
 
-        if (!message.getText().startsWith("/")) {
+        if (!message.getText().startsWith("!")) {
             return false;
         }
 
