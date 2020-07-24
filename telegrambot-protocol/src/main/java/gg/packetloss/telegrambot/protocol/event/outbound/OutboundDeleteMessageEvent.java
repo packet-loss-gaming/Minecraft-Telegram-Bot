@@ -15,22 +15,26 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.command.daemon;
+package gg.packetloss.telegrambot.protocol.event.outbound;
 
-import gg.packetloss.telegrambot.BotCommandManager;
-import gg.packetloss.telegrambot.event.CommandReceivedEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import gg.packetloss.telegrambot.protocol.data.Chat;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
+import gg.packetloss.telegrambot.protocol.event.EventType;
+import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 
-public class RemoteCommandHandler implements Listener {
-    private final BotCommandManager commandManager;
+public class OutboundDeleteMessageEvent extends ProtocolEvent {
+    private final TGMessageID messageID;
 
-    public RemoteCommandHandler(BotCommandManager commandManager) {
-        this.commandManager = commandManager;
+    public OutboundDeleteMessageEvent(TGMessageID messageID) {
+        this.messageID = messageID;
     }
 
-    @EventHandler
-    public void onCommand(CommandReceivedEvent event) {
-        commandManager.handleCommand(event.getSender(), event.getChat(), event.getMessageID(), event.getCommandText());
+    public TGMessageID getMessageID() {
+        return messageID;
+    }
+
+    @Override
+    public EventType getType() {
+        return EventType.OUTBOUND_DELETE_MESSAGE;
     }
 }

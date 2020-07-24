@@ -21,6 +21,7 @@ import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Command;
 import gg.packetloss.telegrambot.protocol.data.Sender;
 import gg.packetloss.telegrambot.protocol.data.TextMessage;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -40,6 +41,10 @@ public class CommandReceivedEvent extends Event {
 
     public Sender getSender() {
         return command.getSender();
+    }
+
+    public TGMessageID getMessageID() {
+        return command.getMessageID();
     }
 
     public String getCommandText() {

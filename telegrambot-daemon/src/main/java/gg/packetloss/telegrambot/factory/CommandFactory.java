@@ -18,6 +18,8 @@
 package gg.packetloss.telegrambot.factory;
 
 import gg.packetloss.telegrambot.protocol.data.Command;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGChatID;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 public class CommandFactory {
@@ -27,6 +29,7 @@ public class CommandFactory {
         return new Command(
                 ChatFactory.build(message.getChat()),
                 SenderFactory.build(message.getFrom()),
+                new TGMessageID(new TGChatID(message.getChatId()), message.getMessageId()),
                 message.getText().substring(1)
         );
     }

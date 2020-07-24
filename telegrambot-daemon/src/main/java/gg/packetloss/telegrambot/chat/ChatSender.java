@@ -20,8 +20,10 @@ package gg.packetloss.telegrambot.chat;
 import gg.packetloss.telegrambot.TelegramBot;
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -118,5 +120,29 @@ public class ChatSender {
 
     public void sendMessageToModChannelsSilently(String text) {
         sendMessageToModChannelsInternal(text, false);
+    }
+
+    public void deleteMessageID(TGMessageID messageID) {
+        DeleteMessage deleteMessage = new DeleteMessage(messageID.getChatID().asLong(), messageID.asInt());
+        try {
+            bot.executeAsync(deleteMessage, new SentCallback<>() {
+                @Override
+                public void onResult(BotApiMethod<Boolean> method, Boolean response) {
+
+                }
+
+                @Override
+                public void onError(BotApiMethod<Boolean> method, TelegramApiRequestException apiException) {
+
+                }
+
+                @Override
+                public void onException(BotApiMethod<Boolean> method, Exception exception) {
+
+                }
+            });
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 }

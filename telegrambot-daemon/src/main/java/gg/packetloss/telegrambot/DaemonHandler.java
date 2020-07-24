@@ -73,6 +73,10 @@ public class DaemonHandler {
         chatSender.sendMessageToModChannelsSilently(event.getText());
     }
 
+    private void handleDeleteMessage(OutboundDeleteMessageEvent event) {
+        chatSender.deleteMessageID(event.getMessageID());
+    }
+
     public void accept(ProtocolEvent event) {
         switch (event.getType()) {
             case OUTBOUND_CONFIG_SYNC:
@@ -95,6 +99,9 @@ public class DaemonHandler {
                 break;
             case OUTBOUND_MOD_SILENT_TEXT_MESSAGE:
                 handleModSilentTextMessage((OutboundModSilentTextMessageEvent) event);
+                break;
+            case OUTBOUND_DELETE_MESSAGE:
+                handleDeleteMessage((OutboundDeleteMessageEvent) event);
                 break;
             case GENERIC_NOTHING:
                 try {

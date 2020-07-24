@@ -19,6 +19,7 @@ package gg.packetloss.telegrambot;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import gg.packetloss.telegrambot.verified.PendingVerificationDatabase;
 import gg.packetloss.telegrambot.verified.VerifiedDatabase;
 
@@ -31,5 +32,8 @@ public interface Bot {
     public void sendMessageToSyncChannels(String fromUser, String message);
     public void sendMessageToSyncChannels(String message);
     public void sendMessageToModChannels(String message);
+
+    public void delete(TGMessageID messageID);
+
     public void updateConfig();
 }

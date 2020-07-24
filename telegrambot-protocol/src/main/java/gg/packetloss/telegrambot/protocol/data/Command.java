@@ -17,14 +17,18 @@
 
 package gg.packetloss.telegrambot.protocol.data;
 
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
+
 public class Command {
     private final Chat chat;
     private final Sender sender;
+    private final TGMessageID messageID;
     private final String commandText;
 
-    public Command(Chat chat, Sender sender, String commandText) {
+    public Command(Chat chat, Sender sender, TGMessageID messageID, String commandText) {
         this.chat = chat;
         this.sender = sender;
+        this.messageID = messageID;
         this.commandText = commandText;
     }
 
@@ -34,6 +38,10 @@ public class Command {
 
     public Sender getSender() {
         return sender;
+    }
+
+    public TGMessageID getMessageID() {
+        return messageID;
     }
 
     public String getCommandText() {

@@ -36,7 +36,8 @@ public enum EventType {
     OUTBOUND_TEXT_MESSAGE_TO_CHAT(OutboundTextMessageToChatEvent.class),
     OUTBOUND_TEXT_MESSAGE_TO_USER_IN_CHAT(OutboundTextMessageToUserInChatEvent.class),
     OUTBOUND_MOD_TEXT_MESSAGE(OutboundModTextMessageEvent.class),
-    OUTBOUND_MOD_SILENT_TEXT_MESSAGE(OutboundModSilentTextMessageEvent.class);
+    OUTBOUND_MOD_SILENT_TEXT_MESSAGE(OutboundModSilentTextMessageEvent.class),
+    OUTBOUND_DELETE_MESSAGE(OutboundDeleteMessageEvent.class);
 
     private final Class<? extends ProtocolEvent> clazz;
 

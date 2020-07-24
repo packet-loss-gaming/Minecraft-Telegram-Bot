@@ -30,6 +30,7 @@ import gg.packetloss.telegrambot.command.daemon.PingCommands;
 import gg.packetloss.telegrambot.command.daemon.PingCommandsRegistration;
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.exception.ConditionFailedException;
@@ -65,18 +66,19 @@ public class BotCommandManager {
         return CommandArgParser.forArgString(input).parseArgs();
     }
 
-    private MemoizingValueAccess initializeInjectedValues(Sender sender, Chat chat, Arguments arguments) {
+    private MemoizingValueAccess initializeInjectedValues(Sender sender, Chat chat, TGMessageID messageID, Arguments arguments) {
         InjectedValueStore store = MapBackedValueStore.create();
 
         store.injectValue(Key.of(Sender.class), ValueProvider.constant(sender));
         store.injectValue(Key.of(Chat.class), ValueProvider.constant(chat));
+        store.injectValue(Key.of(TGMessageID.class), ValueProvider.constant(messageID));
 
         store.injectValue(Key.of(Arguments.class), ValueProvider.constant(arguments));
 
         return MemoizingValueAccess.wrap(MergedValueAccess.of(store, globalInjectedValues));
     }
 
-    public void handleCommand(Sender sender, Chat chat, String arguments) {
+    public void handleCommand(Sender sender, Chat chat, TGMessageID messageID, String arguments) {
         String[] split = parseArgs(arguments).map(Substring::getSubstring).toArray(String[]::new);
 
         // No command found!
@@ -85,7 +87,7 @@ public class BotCommandManager {
             return;
         }
 
-        MemoizingValueAccess context = initializeInjectedValues(sender, chat, () -> arguments);
+        MemoizingValueAccess context = initializeInjectedValues(sender, chat, messageID, () -> arguments);
 
         try {
             commandManager.execute(context, ImmutableList.copyOf(split));

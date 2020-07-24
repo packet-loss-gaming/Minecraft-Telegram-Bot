@@ -22,6 +22,7 @@ import gg.packetloss.telegrambot.BotConfiguration;
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.*;
 import gg.packetloss.telegrambot.verified.FlatFileVerifiedDatabase;
@@ -81,6 +82,11 @@ public class ClientServerBot implements Bot {
     @Override
     public void sendMessageToModChannels(String message) {
         pendingEvents.add(new OutboundModTextMessageEvent(message));
+    }
+
+    @Override
+    public void delete(TGMessageID messageID) {
+        pendingEvents.add(new OutboundDeleteMessageEvent(messageID));
     }
 
     @Override
