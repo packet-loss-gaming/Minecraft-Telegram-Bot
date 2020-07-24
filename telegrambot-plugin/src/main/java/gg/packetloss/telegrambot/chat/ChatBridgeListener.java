@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
+import java.util.UUID;
 
 import static gg.packetloss.telegrambot.BotComponent.getBot;
 
@@ -49,14 +50,15 @@ public class ChatBridgeListener implements Listener {
         return COLOR_OPTIONS.get(Math.abs(name.hashCode()) % COLOR_OPTIONS.size());
     }
 
-    private void sendMessageBroadcast(String senderName, String messageBody) {
+    private void sendMessageBroadcast(String senderName, boolean verified, String messageBody) {
         var text = Text.of(
                 Text.of(
                         ChatColor.BLUE,
                         "<",
                         Text.of(getNameColor(senderName), senderName),
+                        (verified ? "" : "*"),
                         "> ",
-                        TextAction.Hover.showText(Text.of("Sent via Telegram")),
+                        TextAction.Hover.showText(Text.of("Sent via Telegram", verified ? "" : " - Unverified")),
                         TextAction.Click.openURL("https://t.me/skelril")
                 ),
                 messageBody
@@ -67,24 +69,40 @@ public class ChatBridgeListener implements Listener {
                                                      // with text components (sadly)
     }
 
+    private UUID getMinecraftID(Sender sender) {
+        return getBot().getVerifiedDB().getMinecraftID(sender.getID());
+    }
+
+    private String getSenderName(Sender sender, UUID minecraftID) {
+        if (minecraftID != null) {
+            return Bukkit.getOfflinePlayer(minecraftID).getName();
+        }
+
+        return sender.getName();
+    }
+
     @EventHandler
     public void onMessageReceivedEvent(TextMessageReceivedEvent event) {
         TextMessage message = event.getMessage();
 
-        String senderName = message.getSender().map(Sender::getName).orElse("Unknown Sender");
+        UUID minecraftID = message.getSender().map(this::getMinecraftID).orElse(null);
+
+        String senderName = message.getSender().map(sender -> getSenderName(sender, minecraftID)).orElse("Unknown Sender");
         String messageBody = message.getBody();
 
-        sendMessageBroadcast(senderName, messageBody);
+        sendMessageBroadcast(senderName, minecraftID != null, messageBody);
     }
 
     @EventHandler
     public void onMessageUpdatedEvent(TextMessageUpdatedEvent event) {
         TextMessage message = event.getMessage();
 
-        String senderName = message.getSender().map(Sender::getName).orElse("Unknown Sender");
+        UUID minecraftID = message.getSender().map(this::getMinecraftID).orElse(null);
+
+        String senderName = message.getSender().map(sender -> getSenderName(sender, minecraftID)).orElse("Unknown Sender");
         String messageBody = message.getBody();
 
-        sendMessageBroadcast(senderName, messageBody + "*");
+        sendMessageBroadcast(senderName, minecraftID != null, messageBody + "*");
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

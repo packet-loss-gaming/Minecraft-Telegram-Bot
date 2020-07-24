@@ -15,24 +15,16 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.command;
+package gg.packetloss.telegrambot.protocol.data.abstraction;
 
-import gg.packetloss.telegrambot.protocol.data.Chat;
-import gg.packetloss.telegrambot.protocol.data.Sender;
-import org.enginehub.piston.annotation.Command;
-import org.enginehub.piston.annotation.CommandContainer;
+public class TGUserID {
+    private final long id;
 
-import static gg.packetloss.telegrambot.BotComponent.getBot;
-
-@CommandContainer
-public class PingCommands {
-    @Command(name = "ping", desc = "Ping the bot")
-    public void pingCmd(Chat chat) {
-        getBot().sendMessageToChat(chat, "Pong!");
+    public TGUserID(long id) {
+        this.id = id;
     }
 
-    @Command(name = "pong", desc = "Ping the bot (with a twist)")
-    public void pongCmd(Chat chat, Sender sender) {
-        getBot().sendMessageToChat(chat, sender.getName() + " likes cute, rabid, cows!");
+    public long asLong() {
+        return id;
     }
 }

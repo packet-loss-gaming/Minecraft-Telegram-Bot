@@ -15,21 +15,25 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot;
+package gg.packetloss.telegrambot.command.daemon;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
-import gg.packetloss.telegrambot.verified.PendingVerificationDatabase;
-import gg.packetloss.telegrambot.verified.VerifiedDatabase;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
 
-public interface Bot {
-    public PendingVerificationDatabase getPendingVerificationDB();
-    public VerifiedDatabase getVerifiedDB();
+import static gg.packetloss.telegrambot.BotComponent.getBot;
 
-    public void sendMessageToChat(Chat chat, String message);
-    public void sendMessageToUserInChat(Sender user, Chat chat, String message);
-    public void sendMessageToSyncChannels(String fromUser, String message);
-    public void sendMessageToSyncChannels(String message);
-    public void sendMessageToModChannels(String message);
-    public void updateConfig();
+@CommandContainer
+public class LinkCommands {
+    @Command(name = "link", desc = "Link your Minecraft account")
+    public void linkCmd(Chat chat, Sender sender, @Arg(desc = "minecraft name") String minecraftName) {
+        Chat targetChat =  chat.isPrivate() ? chat : new Chat(sender);
+        String verificationCode = getBot().getPendingVerificationDB().createChallenge(sender.getID(), minecraftName);
+        getBot().sendMessageToChat(
+                targetChat,
+                "Please verify yourself in game via: \"/telegram verify " + verificationCode + '"'
+        );
+    }
 }

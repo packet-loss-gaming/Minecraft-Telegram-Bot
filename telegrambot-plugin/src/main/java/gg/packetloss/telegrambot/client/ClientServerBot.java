@@ -24,20 +24,38 @@ import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
 import gg.packetloss.telegrambot.protocol.data.Sender;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.*;
+import gg.packetloss.telegrambot.verified.FlatFileVerifiedDatabase;
+import gg.packetloss.telegrambot.verified.PendingVerificationDatabase;
+import gg.packetloss.telegrambot.verified.VerifiedDatabase;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class ClientServerBot implements Bot {
-    private Deque<ProtocolEvent> pendingEvents = new ArrayDeque<>();
-    private BotConfiguration config;
+    private final Deque<ProtocolEvent> pendingEvents = new ArrayDeque<>();
 
-    public ClientServerBot(BotConfiguration config) {
+    private final BotConfiguration config;
+    private final VerifiedDatabase verifiedDatabase;
+    private final PendingVerificationDatabase pendingVerificationDatabase;
+
+    public ClientServerBot(BotConfiguration config, VerifiedDatabase verifiedDatabase, PendingVerificationDatabase pendingVerificationDatabase) {
         this.config = config;
+        this.verifiedDatabase = verifiedDatabase;
+        this.pendingVerificationDatabase = pendingVerificationDatabase;
     }
 
     public Deque<ProtocolEvent> getPendingEvents() {
         return pendingEvents;
+    }
+
+    @Override
+    public PendingVerificationDatabase getPendingVerificationDB() {
+        return pendingVerificationDatabase;
+    }
+
+    @Override
+    public VerifiedDatabase getVerifiedDB() {
+        return verifiedDatabase;
     }
 
     @Override

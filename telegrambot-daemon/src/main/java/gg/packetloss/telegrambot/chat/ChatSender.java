@@ -77,7 +77,7 @@ public class ChatSender {
     }
 
     public void sendMessageToChat(Chat chat, String text) {
-        SendMessage telegramMessage = new SendMessage(chat.getID(), text);
+        SendMessage telegramMessage = new SendMessage(chat.getID().asLong(), text);
         telegramMessage.disableNotification();
         try {
             bot.executeAsync(telegramMessage, new SentCallback<>() {

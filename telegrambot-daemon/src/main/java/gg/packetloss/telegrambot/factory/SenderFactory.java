@@ -18,6 +18,7 @@
 package gg.packetloss.telegrambot.factory;
 
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGUserID;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 public class SenderFactory {
@@ -40,6 +41,6 @@ public class SenderFactory {
     }
 
     public static Sender build(User sender) {
-        return new Sender(getName(sender));
+        return new Sender(new TGUserID(sender.getId()), getName(sender));
     }
 }

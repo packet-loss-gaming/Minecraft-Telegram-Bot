@@ -17,14 +17,10 @@
 
 package gg.packetloss.telegrambot.protocol.data;
 
-public class Sender {
-    private final String name;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGUserID;
 
-    public Sender(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+public class Sender extends User {
+    public Sender(TGUserID id, String name) {
+        super(id, name);
     }
 }

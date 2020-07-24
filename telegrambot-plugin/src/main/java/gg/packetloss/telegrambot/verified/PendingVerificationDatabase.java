@@ -15,39 +15,14 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.protocol.data;
+package gg.packetloss.telegrambot.verified;
 
-import gg.packetloss.telegrambot.protocol.data.abstraction.TGChatID;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGUserID;
 
-public class Chat {
-    private final TGChatID id;
-    private final Type type;
+import java.util.Optional;
 
-    public Chat(TGChatID id, Type type) {
-        this.id = id;
-        this.type = type;
-    }
+public interface PendingVerificationDatabase {
+    public String createChallenge(TGUserID telegramID, String minecraftName);
 
-    public Chat(Sender sender) {
-        this.id = sender.getChatID();
-        this.type = Type.PRIVATE;
-    }
-
-    public TGChatID getID() {
-        return id;
-    }
-
-    public boolean isPrivate() {
-        return type == Type.PRIVATE;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public enum Type {
-        PRIVATE,
-        GROUP,
-        CHANNEL
-    }
+    public Optional<TGUserID> matches(String minecraftName, String challengeToken);
 }

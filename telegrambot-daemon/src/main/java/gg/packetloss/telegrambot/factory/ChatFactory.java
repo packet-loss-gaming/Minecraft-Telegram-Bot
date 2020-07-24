@@ -18,11 +18,24 @@
 package gg.packetloss.telegrambot.factory;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGChatID;
 
 public class ChatFactory {
     private ChatFactory() { }
 
+    private static Chat.Type getType(org.telegram.telegrambots.meta.api.objects.Chat chat) {
+        if (chat.isGroupChat()) {
+            return Chat.Type.GROUP;
+        }
+
+        if (chat.isUserChat()) {
+            return Chat.Type.PRIVATE;
+        }
+
+        return Chat.Type.CHANNEL;
+    }
+
     public static Chat build(org.telegram.telegrambots.meta.api.objects.Chat chat) {
-        return new Chat(chat.getId());
+        return new Chat(new TGChatID(chat.getId()), getType(chat));
     }
 }

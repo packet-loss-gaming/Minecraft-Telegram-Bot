@@ -24,8 +24,10 @@ import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.internal.util.Substring;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import gg.packetloss.telegrambot.command.PingCommands;
-import gg.packetloss.telegrambot.command.PingCommandsRegistration;
+import gg.packetloss.telegrambot.command.daemon.LinkCommands;
+import gg.packetloss.telegrambot.command.daemon.LinkCommandsRegistration;
+import gg.packetloss.telegrambot.command.daemon.PingCommands;
+import gg.packetloss.telegrambot.command.daemon.PingCommandsRegistration;
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
 import org.enginehub.piston.Command;
@@ -56,6 +58,7 @@ public class BotCommandManager {
 
     protected void registerCoreCommands() {
         registration.register(commandManager, PingCommandsRegistration.builder(), new PingCommands());
+        registration.register(commandManager, LinkCommandsRegistration.builder(), new LinkCommands());
     }
 
     private Stream<Substring> parseArgs(String input) {

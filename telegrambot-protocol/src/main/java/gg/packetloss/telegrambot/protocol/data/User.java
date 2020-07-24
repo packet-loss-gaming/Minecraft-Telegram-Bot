@@ -15,22 +15,29 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.command;
+package gg.packetloss.telegrambot.protocol.data;
 
-import gg.packetloss.telegrambot.BotCommandManager;
-import gg.packetloss.telegrambot.event.CommandReceivedEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGChatID;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGUserID;
 
-public class RemoteCommandHandler implements Listener {
-    private final BotCommandManager commandManager;
+public class User {
+    private final TGUserID id;
+    private final String name;
 
-    public RemoteCommandHandler(BotCommandManager commandManager) {
-        this.commandManager = commandManager;
+    public User(TGUserID id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    @EventHandler
-    public void onCommand(CommandReceivedEvent event) {
-        commandManager.handleCommand(event.getSender(), event.getChat(), event.getCommandText());
+    public TGUserID getID() {
+        return id;
+    }
+
+    public TGChatID getChatID() {
+        return new TGChatID(id.asLong());
+    }
+
+    public String getName() {
+        return name;
     }
 }

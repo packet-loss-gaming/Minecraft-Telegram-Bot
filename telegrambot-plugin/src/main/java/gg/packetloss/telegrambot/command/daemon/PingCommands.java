@@ -15,21 +15,24 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot;
+package gg.packetloss.telegrambot.command.daemon;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
-import gg.packetloss.telegrambot.verified.PendingVerificationDatabase;
-import gg.packetloss.telegrambot.verified.VerifiedDatabase;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
 
-public interface Bot {
-    public PendingVerificationDatabase getPendingVerificationDB();
-    public VerifiedDatabase getVerifiedDB();
+import static gg.packetloss.telegrambot.BotComponent.getBot;
 
-    public void sendMessageToChat(Chat chat, String message);
-    public void sendMessageToUserInChat(Sender user, Chat chat, String message);
-    public void sendMessageToSyncChannels(String fromUser, String message);
-    public void sendMessageToSyncChannels(String message);
-    public void sendMessageToModChannels(String message);
-    public void updateConfig();
+@CommandContainer
+public class PingCommands {
+    @Command(name = "ping", desc = "Ping the bot")
+    public void pingCmd(Chat chat) {
+        getBot().sendMessageToChat(chat, "Pong!");
+    }
+
+    @Command(name = "pong", desc = "Ping the bot (with a twist)")
+    public void pongCmd(Chat chat, Sender sender) {
+        getBot().sendMessageToChat(chat, sender.getName() + " likes cute, rabid, cows!");
+    }
 }

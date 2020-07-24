@@ -15,39 +15,16 @@
  * along with Minecraft Telegram Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gg.packetloss.telegrambot.protocol.data;
+package gg.packetloss.telegrambot.protocol.data.abstraction;
 
-import gg.packetloss.telegrambot.protocol.data.abstraction.TGChatID;
+public class TGChatID {
+    private final long id;
 
-public class Chat {
-    private final TGChatID id;
-    private final Type type;
-
-    public Chat(TGChatID id, Type type) {
+    public TGChatID(long id) {
         this.id = id;
-        this.type = type;
     }
 
-    public Chat(Sender sender) {
-        this.id = sender.getChatID();
-        this.type = Type.PRIVATE;
-    }
-
-    public TGChatID getID() {
+    public long asLong() {
         return id;
-    }
-
-    public boolean isPrivate() {
-        return type == Type.PRIVATE;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public enum Type {
-        PRIVATE,
-        GROUP,
-        CHANNEL
     }
 }
