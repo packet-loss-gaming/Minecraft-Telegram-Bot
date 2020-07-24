@@ -19,6 +19,7 @@ package gg.packetloss.telegrambot.command.daemon;
 
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
+import gg.packetloss.telegrambot.protocol.data.abstraction.TGMessageID;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
 import org.enginehub.piston.annotation.param.Arg;
@@ -28,8 +29,12 @@ import static gg.packetloss.telegrambot.BotComponent.getBot;
 @CommandContainer
 public class LinkCommands {
     @Command(name = "link", desc = "Link your Minecraft account")
-    public void linkCmd(Chat chat, Sender sender, @Arg(desc = "minecraft name") String minecraftName) {
-        Chat targetChat =  chat.isPrivate() ? chat : new Chat(sender);
+    public void linkCmd(Chat chat, Sender sender, TGMessageID messageID, @Arg(desc = "minecraft name") String minecraftName) {
+        Chat targetChat = chat.isPrivate() ? chat : new Chat(sender);
+        if (chat != targetChat) {
+            getBot().delete(messageID);
+        }
+
         String verificationCode = getBot().getPendingVerificationDB().createChallenge(sender.getID(), minecraftName);
         getBot().sendMessageToChat(
                 targetChat,
