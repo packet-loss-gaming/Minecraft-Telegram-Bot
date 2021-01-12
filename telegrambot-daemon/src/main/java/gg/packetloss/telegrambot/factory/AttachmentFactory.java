@@ -36,8 +36,6 @@ public class AttachmentFactory {
         return SenderFactory.build(message.getFrom());
     }
 
-    private static final List<String> RECOGNIZED_PHOTO_TYPES = List.of("image/jpeg", "png", "tif", "webp", "gif");
-
     private static Attachment.AttachmentKind getKind(Message message) {
         if (message.hasPhoto()) {
             return Attachment.AttachmentKind.PHOTO;
