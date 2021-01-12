@@ -55,6 +55,10 @@ public class AttachmentFactory {
                 return Attachment.AttachmentKind.VIDEO;
             }
 
+            if (mimeName.startsWith("audio/")) {
+                return Attachment.AttachmentKind.AUDIO_MESSAGE;
+            }
+
             return Attachment.AttachmentKind.FILE;
         }
 
