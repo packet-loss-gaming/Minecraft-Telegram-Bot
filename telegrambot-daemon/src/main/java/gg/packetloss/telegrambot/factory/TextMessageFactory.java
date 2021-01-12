@@ -34,7 +34,19 @@ public class TextMessageFactory {
         return SenderFactory.build(message.getFrom());
     }
 
+    private static String getText(Message message) {
+        if (message.getText() != null) {
+            return message.getText();
+        }
+
+        if (message.getCaption() != null) {
+            return message.getCaption();
+        }
+
+        throw new IllegalStateException("Not a text message!");
+    }
+
     public static TextMessage build(Message message) {
-        return new TextMessage(getSender(message), message.getText());
+        return new TextMessage(getSender(message), getText(message));
     }
 }

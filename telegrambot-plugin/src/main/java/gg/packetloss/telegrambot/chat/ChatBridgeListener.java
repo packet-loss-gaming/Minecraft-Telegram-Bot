@@ -20,8 +20,10 @@ package gg.packetloss.telegrambot.chat;
 import com.google.common.collect.Lists;
 import gg.packetloss.bukkittext.Text;
 import gg.packetloss.bukkittext.TextAction;
+import gg.packetloss.telegrambot.event.AttachmentReceivedEvent;
 import gg.packetloss.telegrambot.event.TextMessageReceivedEvent;
 import gg.packetloss.telegrambot.event.TextMessageUpdatedEvent;
+import gg.packetloss.telegrambot.protocol.data.Attachment;
 import gg.packetloss.telegrambot.protocol.data.Sender;
 import gg.packetloss.telegrambot.protocol.data.TextMessage;
 import org.bukkit.Bukkit;
@@ -50,6 +52,52 @@ public class ChatBridgeListener implements Listener {
         return COLOR_OPTIONS.get(Math.abs(name.hashCode()) % COLOR_OPTIONS.size());
     }
 
+    private UUID getMinecraftID(Sender sender) {
+        return getBot().getVerifiedDB().getMinecraftID(sender.getID());
+    }
+
+    private String getSenderName(Sender sender, UUID minecraftID) {
+        if (minecraftID != null) {
+            return Bukkit.getOfflinePlayer(minecraftID).getName();
+        }
+
+        return sender.getName();
+    }
+
+    private void broadcast(Text text) {
+        var builtText = text.build();
+        Bukkit.broadcast(builtText);
+        Bukkit.getConsoleSender().sendMessage(builtText); // console doesn't receive messages from broadcast when
+                                                          // created with text components (sadly)
+    }
+
+    private void sendActionBroadcast(String senderName, boolean verified, String messageBody) {
+        var text = Text.of(
+            Text.of(
+                ChatColor.BLUE,
+                "* ",
+                Text.of(getNameColor(senderName), senderName),
+                (verified ? " " : "* "),
+                TextAction.Hover.showText(Text.of("Sent via Telegram", verified ? "" : " - Unverified")),
+                TextAction.Click.openURL("https://t.me/skelril")
+            ),
+            messageBody
+        );
+
+        broadcast(text);
+    }
+
+    @EventHandler
+    public void onAttachmentReceivedEvent(AttachmentReceivedEvent event) {
+        UUID minecraftID = event.getSender().map(this::getMinecraftID).orElse(null);
+
+        String senderName = event.getSender().map(sender -> getSenderName(sender, minecraftID)).orElse("Unknown Sender");
+        Attachment.AttachmentKind kind = event.getAttachmentKind();
+        String messageBody = "sent " + (kind.usesAn() ? "an " : "a ") + kind.getFriendlyName();
+
+        sendActionBroadcast(senderName, minecraftID != null, messageBody);
+    }
+
     private void sendMessageBroadcast(String senderName, boolean verified, String messageBody) {
         var text = Text.of(
                 Text.of(
@@ -62,23 +110,9 @@ public class ChatBridgeListener implements Listener {
                         TextAction.Click.openURL("https://t.me/skelril")
                 ),
                 messageBody
-        ).build();
+        );
 
-        Bukkit.broadcast(text);
-        Bukkit.getConsoleSender().sendMessage(text); // console doesn't receive messages from broadcast when created
-                                                     // with text components (sadly)
-    }
-
-    private UUID getMinecraftID(Sender sender) {
-        return getBot().getVerifiedDB().getMinecraftID(sender.getID());
-    }
-
-    private String getSenderName(Sender sender, UUID minecraftID) {
-        if (minecraftID != null) {
-            return Bukkit.getOfflinePlayer(minecraftID).getName();
-        }
-
-        return sender.getName();
+        broadcast(text);
     }
 
     @EventHandler

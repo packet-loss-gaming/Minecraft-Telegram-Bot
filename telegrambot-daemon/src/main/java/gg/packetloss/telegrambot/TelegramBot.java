@@ -17,19 +17,24 @@
 
 package gg.packetloss.telegrambot;
 
+import gg.packetloss.telegrambot.factory.AttachmentFactory;
 import gg.packetloss.telegrambot.factory.CommandFactory;
 import gg.packetloss.telegrambot.protocol.data.ConfigDetail;
+import gg.packetloss.telegrambot.protocol.data.TextMessage;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
+import gg.packetloss.telegrambot.protocol.event.inbout.InboundAttachmentEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundCommandEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundNewMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundUpdatedTextMessageEvent;
 import gg.packetloss.telegrambot.factory.TextMessageFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
     private Deque<ProtocolEvent> pendingEvents = new ArrayDeque<>();
@@ -48,7 +53,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private boolean isValidTextMessage(Message message) {
-        if (message.getText() == null) {
+        if (message.getText() == null && message.getCaption() == null) {
             return false;
         }
 
@@ -58,6 +63,51 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
 
         return true;
+    }
+
+    private boolean hasAttachments(Message message) {
+        String chatId = String.valueOf(message.getChatId());
+        if (!config.getSyncChats().contains(chatId)) {
+            return false;
+        }
+
+        if (message.hasPhoto()) {
+            return true;
+        }
+
+        if (message.hasSticker()) {
+            return true;
+        }
+
+        if (message.hasDocument()) {
+            return true;
+        }
+
+        if (message.hasVideo() || message.hasVideoNote()) {
+            return true;
+        }
+
+        if (message.hasVoice()) {
+            return true;
+        }
+
+        if (message.hasAudio()) {
+            return true;
+        }
+
+        if (message.hasPoll()) {
+            return true;
+        }
+
+        if (message.hasContact()) {
+            return true;
+        }
+
+        if (message.getGame() != null) {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean isValidCommand(Message message) {
@@ -85,6 +135,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (isValidCommand(message)) {
                 pendingEvents.add(new InboundCommandEvent(CommandFactory.build(message)));
                 return;
+            }
+
+            if (hasAttachments(message)) {
+                pendingEvents.add(new InboundAttachmentEvent(AttachmentFactory.build(message)));
             }
 
             if (isValidTextMessage(message)) {

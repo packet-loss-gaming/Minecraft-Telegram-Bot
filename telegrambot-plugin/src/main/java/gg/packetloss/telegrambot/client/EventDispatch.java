@@ -18,8 +18,10 @@
 package gg.packetloss.telegrambot.client;
 
 import com.sk89q.commandbook.CommandBook;
+import gg.packetloss.telegrambot.event.AttachmentReceivedEvent;
 import gg.packetloss.telegrambot.event.CommandReceivedEvent;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
+import gg.packetloss.telegrambot.protocol.event.inbout.InboundAttachmentEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundCommandEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundTextMessageEvent;
 import gg.packetloss.telegrambot.event.TextMessageReceivedEvent;
@@ -30,6 +32,9 @@ import static gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEve
 class EventDispatch {
     public void accept(ProtocolEvent event) {
         switch (event.getType()) {
+            case INBOUND_ATTACHMENT:
+                CommandBook.callEvent(new AttachmentReceivedEvent(((InboundAttachmentEvent) event).getAttachment()));
+                break;
             case INBOUND_COMMAND:
                 CommandBook.callEvent(new CommandReceivedEvent(((InboundCommandEvent) event).getCommand()));
                 break;

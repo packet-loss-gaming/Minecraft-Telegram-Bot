@@ -18,6 +18,7 @@
 package gg.packetloss.telegrambot.protocol.event;
 
 import gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent;
+import gg.packetloss.telegrambot.protocol.event.inbout.InboundAttachmentEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundCommandEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundNewMessageEvent;
 import gg.packetloss.telegrambot.protocol.event.inbout.InboundUpdatedTextMessageEvent;
@@ -26,6 +27,7 @@ import gg.packetloss.telegrambot.protocol.event.outbound.*;
 public enum EventType {
     GENERIC_NOTHING(GenericNothingEvent.class),
 
+    INBOUND_ATTACHMENT(InboundAttachmentEvent.class),
     INBOUND_COMMAND(InboundCommandEvent.class),
     INBOUND_NEW_MESSAGE(InboundNewMessageEvent.class),
     INBOUND_UPDATED_MESSAGE(InboundUpdatedTextMessageEvent.class),
