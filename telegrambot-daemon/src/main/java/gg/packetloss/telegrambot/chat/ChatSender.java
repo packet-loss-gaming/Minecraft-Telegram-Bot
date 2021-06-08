@@ -79,7 +79,7 @@ public class ChatSender {
     }
 
     public void sendMessageToChat(Chat chat, String text) {
-        SendMessage telegramMessage = new SendMessage(chat.getID().asLong(), text);
+        SendMessage telegramMessage = new SendMessage(String.valueOf(chat.getID().asLong()), text);
         telegramMessage.disableNotification();
         try {
             bot.executeAsync(telegramMessage, new SentCallback<>() {
@@ -123,7 +123,7 @@ public class ChatSender {
     }
 
     public void deleteMessageID(TGMessageID messageID) {
-        DeleteMessage deleteMessage = new DeleteMessage(messageID.getChatID().asLong(), messageID.asInt());
+        DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(messageID.getChatID().asLong()), messageID.asInt());
         try {
             bot.executeAsync(deleteMessage, new SentCallback<>() {
                 @Override

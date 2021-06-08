@@ -21,18 +21,20 @@ import gg.packetloss.telegrambot.chat.ChatSender;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.event.outbound.*;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import static gg.packetloss.telegrambot.protocol.event.generic.GenericNothingEvent.SLEEP_DURATION;
 
 public class DaemonHandler {
-    private final TelegramBotsApi api = new TelegramBotsApi();
+    private final TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
 
     private final TelegramBot bot;
     private final ChatSender chatSender;
 
     private boolean botRegistered = false;
 
-    public DaemonHandler(TelegramBot bot) {
+    public DaemonHandler(TelegramBot bot) throws TelegramApiException {
         this.bot = bot;
         this.chatSender = new ChatSender(bot);
     }

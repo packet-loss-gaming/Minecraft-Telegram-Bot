@@ -20,7 +20,9 @@ package gg.packetloss.telegrambot;
 import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.MessageProcessor;
 import gg.packetloss.telegrambot.protocol.PlatformAdapter;
-import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -29,9 +31,7 @@ import java.util.Deque;
 import java.util.Scanner;
 
 public class Daemon {
-    public static void main(String[] args) {
-        ApiContextInitializer.init();
-
+    public static void main(String[] args) throws TelegramApiException {
         TelegramBot bot = new TelegramBot();
         DaemonHandler handler = new DaemonHandler(bot);
 
