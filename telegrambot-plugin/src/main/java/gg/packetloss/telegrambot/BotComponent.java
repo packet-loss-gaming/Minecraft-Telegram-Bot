@@ -122,10 +122,9 @@ public class BotComponent extends BukkitComponent {
         CommandBook.registerEvents(new ChatBridgeListener());
         CommandBook.registerEvents(new RemoteCommandHandler(commandManager));
 
-        ComponentCommandRegistrar registrar = CommandBook.getComponentRegistrar();
-        registrar.registerTopLevelCommands((commandManager, registration) -> {
-            registrar.registerAsSubCommand("telegram", "Telegram bot commands", commandManager, (innerCommandManager, innerRegistration) -> {
-                innerRegistration.register(innerCommandManager, TelegramBotCommandsRegistration.builder(), new TelegramBotCommands());
+        CommandBook.getComponentRegistrar().registerTopLevelCommands((registrar) -> {
+            registrar.registerAsSubCommand("telegram", "Telegram bot commands", (telegramRegistrar) -> {
+                telegramRegistrar.register(TelegramBotCommandsRegistration.builder(), new TelegramBotCommands());
             });
         });
 
