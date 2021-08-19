@@ -17,6 +17,7 @@
 
 package gg.packetloss.telegrambot.chat;
 
+import com.vdurmont.emoji.EmojiParser;
 import gg.packetloss.telegrambot.TelegramBot;
 import gg.packetloss.telegrambot.protocol.data.Chat;
 import gg.packetloss.telegrambot.protocol.data.Sender;
@@ -36,9 +37,13 @@ public class ChatSender {
         this.bot = bot;
     }
 
+    private SendMessage processMessage(String channel, String message) {
+        return new SendMessage(channel, EmojiParser.parseToUnicode(message));
+    }
+
     private void sendMessageToChannel(String channel, String message, boolean notify) {
         try {
-            SendMessage telegramMessage = new SendMessage(channel, message);
+            SendMessage telegramMessage = processMessage(channel, message);
             if (!notify) {
                 telegramMessage.disableNotification();
             }
@@ -79,7 +84,7 @@ public class ChatSender {
     }
 
     public void sendMessageToChat(Chat chat, String text) {
-        SendMessage telegramMessage = new SendMessage(String.valueOf(chat.getID().asLong()), text);
+        SendMessage telegramMessage = processMessage(String.valueOf(chat.getID().asLong()), text);
         telegramMessage.disableNotification();
         try {
             bot.executeAsync(telegramMessage, new SentCallback<>() {

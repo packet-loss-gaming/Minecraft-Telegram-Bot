@@ -17,18 +17,18 @@
 
 package gg.packetloss.telegrambot;
 
-import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import gg.packetloss.telegrambot.protocol.MessageProcessor;
 import gg.packetloss.telegrambot.protocol.PlatformAdapter;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
+import gg.packetloss.telegrambot.protocol.event.ProtocolEvent;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Deque;
-import java.util.Scanner;
 
 public class Daemon {
     public static void main(String[] args) throws TelegramApiException {

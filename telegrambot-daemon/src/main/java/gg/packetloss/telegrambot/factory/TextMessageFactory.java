@@ -17,6 +17,7 @@
 
 package gg.packetloss.telegrambot.factory;
 
+import com.vdurmont.emoji.EmojiParser;
 import gg.packetloss.telegrambot.protocol.data.Sender;
 import gg.packetloss.telegrambot.protocol.data.TextMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -47,6 +48,6 @@ public class TextMessageFactory {
     }
 
     public static TextMessage build(Message message) {
-        return new TextMessage(getSender(message), getText(message));
+        return new TextMessage(getSender(message), EmojiParser.parseToAliases(getText(message)));
     }
 }
