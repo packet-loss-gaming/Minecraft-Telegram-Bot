@@ -7,6 +7,10 @@ repositories {
     mavenLocal()
 
     maven {
+        name 'Packet Loss Gaming Repository'
+        url 'https://mvn.packetloss.gg/'
+    }
+    maven {
         name 'Paper Repository'
         url 'https://papermc.io/repo/repository/maven-public/'
     }
@@ -18,9 +22,9 @@ repositories {
 
 dependencies {
     implementation project(':telegrambot-protocol')
-    implementation group: 'gg.packetloss', name: 'bukkit-text', version: '1.16.1.0'
+    implementation group: 'gg.packetloss', name: 'bukkit-text', version: '1.17.1.0'
 
-    compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.1-R0.1-SNAPSHOT'
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.17-R0.1-SNAPSHOT'
     compileOnly group: 'com.sk89q', name: 'commandbook', version: '3.0-SNAPSHOT'
     compileOnly group: 'com.zachsthings.libcomponents', name: 'libcomponents-core', version: '1.3.0-SNAPSHOT'
     compileOnly group: 'com.zachsthings.libcomponents', name: 'libcomponents-bukkit', version: '1.3.0-SNAPSHOT'
